@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>English Tug of War</title>
+<style>
+:root{--bg:#eef1f6;--card:#fff;--tx:#111;--mut:#64748b;--b:#2196f3;--bl:#e3f2fd;--bb:#90caf9;--r:#e53935;--rl:#fdeaea;--rb:#f5a3a3;--ln:#cbd5e1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mut:#94a3b8;--bl:#12304d;--bb:#2b6cb0;--rl:#4a1d1d;--rb:#9b3b3b;--ln:#475569;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mut:#94a3b8;--bl:#12304d;--bb:#2b6cb0;--rl:#4a1d1d;--rb:#9b3b3b;--ln:#475569;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;color:inherit}
+.hide{display:none!important}
+#setup{max-width:760px;margin:0 auto;padding:24px 16px}
+.card{background:var(--card);border-radius:18px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+h1{margin:0 0 4px;font-size:30px;text-align:center}
+.sub{text-align:center;color:var(--mut);margin:0 0 20px}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;border-radius:10px;border:2px solid var(--ln);background:var(--card);color:var(--tx);font:inherit}
+#nb{border-color:var(--b)}#nr{border-color:var(--r)}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:8px 0 18px}
+.tp{padding:12px 8px;border-radius:12px;border:2px solid var(--ln);background:var(--card);font-weight:600}
+.tp.on{border-color:var(--b);background:var(--bl)}
+.go{display:block;width:100%;margin-top:18px;padding:15px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font-size:18px;font-weight:700}
+.note{font-size:13px;color:var(--mut);margin-top:14px;text-align:center}
+#game{padding:12px 16px 24px;max-width:1400px;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0 14px;font-weight:800;font-size:22px}
+.head .tb{color:var(--b)}.head .tr{color:var(--r)}
+.head span.s{font-size:26px;margin:0 10px}
+.logo{font-size:30px;font-weight:900;letter-spacing:-1px;text-align:center}
+.grid{display:grid;grid-template-columns:minmax(230px,1fr) minmax(0,2fr) minmax(230px,1fr);gap:18px;align-items:start}
+.pn{background:var(--card);border-radius:18px;padding:12px;border:2px solid}
+.pn.b{border-color:var(--bb)}.pn.r{border-color:var(--rb)}
+.qb{border-radius:14px;padding:22px 10px;text-align:center;font-size:30px;font-weight:800;line-height:1.2;margin-bottom:10px;border:1px solid;min-height:140px;display:flex;align-items:center;justify-content:center}
+.b .qb{background:var(--bl);color:var(--b);border-color:var(--bb)}
+.r .qb{background:var(--rl);color:var(--r);border-color:var(--rb)}
+.op{display:flex;align-items:center;gap:10px;width:100%;margin-top:8px;padding:11px 12px;border-radius:12px;border:1.5px solid var(--ln);background:var(--card);font-weight:700;font-size:17px;text-align:center}
+.op i{font-style:normal;flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--bl);color:var(--b)}
+.r .op i{background:var(--rl);color:var(--r)}
+.op span{flex:1}
+.op:disabled{cursor:default}
+.op.ok{background:#22c55e;border-color:#16a34a;color:#fff}
+.op.bad{background:#ef4444;border-color:#dc2626;color:#fff}
+.stage{background:var(--card);border-radius:18px;position:relative;padding:44px 8px 8px}
+.timer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--card);border-radius:30px;padding:8px 18px;font-weight:800;font-size:20px;color:#0288d1;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+svg{width:100%;height:auto;display:block}
+#grp{transition:transform .45s ease}
+.bar{display:flex;gap:10px;margin-top:14px}
+.ib{padding:10px 14px;border-radius:12px;border:0;background:var(--card);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.keys{margin-left:auto;font-size:13px;color:var(--mut);align-self:center}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px;z-index:9}
+#ov .card{text-align:center;max-width:420px;width:100%}
+#ov h2{font-size:34px;margin:6px 0}
+@media (max-width:860px){.grid{grid-template-columns:1fr 1fr}.stage{grid-column:1/3;order:-1}.qb{font-size:22px;min-height:100px}.head{font-size:16px}.logo{font-size:20px}.teams{grid-template-columns:1fr}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}.stage{grid-column:auto}}
+</style>
+</head>
+<body>
+<div id="setup">
+ <div class="card">
+  <h1>🤼🪢 English Tug of War 🪢🤼</h1>
+  <p class="sub">Mastery in victory</p>
+  <div class="teams">
+   <div><label for="nb">Team Name</label><input id="nb" maxlength="18" value="Blue Team"></div>
+   <div><label for="nr">Team Name</label><input id="nr" maxlength="18" value="Red Team"></div>
+  </div>
+  <label>Select topics</label>
+  <div class="topics" id="tps"></div>
+  <label for="dur">Game Length</label>
+  <select id="dur"><option value="60">60 seconds</option><option value="90">90 detik</option><option value="120">120 seconds</option><option value="180">180 seconds</option></select>
+  <button class="go" id="start">START NOW</button>
+  <p class="note">This game is AI-generated by Mughits Rifai</p>
+ </div>
+</div>
+
+<div id="game" class="hide">
+ <div class="head">
+  <div class="tb"><span id="tnb"></span><span class="s" id="sb">0</span></div>
+  <div class="logo">tug of war</div>
+  <div class="tr"><span class="s" id="sr">0</span><span id="tnr"></span></div>
+ </div>
+ <div class="grid">
+  <div class="pn b" id="pb"></div>
+  <div class="stage">
+   <div class="timer">⏱ <span id="tm">00:60</span></div>
+   <svg viewBox="0 0 650 340" role="img" aria-label="Tarik tambang">
+    <line x1="325" y1="10" x2="325" y2="320" stroke="#64748b" stroke-width="2" stroke-dasharray="8 8"/>
+    <path d="M10 302H640" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+    <g id="grp"></g>
+   </svg>
+  </div>
+  <div class="pn r" id="pr"></div>
+ </div>
+ <div class="bar"><button class="ib" id="home">🏠 Menu</button><span class="keys">Blue: Q W E R · Red: U I O P</span></div>
+</div>
+
+<div id="ov" class="hide"><div class="card"><div style="font-size:54px">🏆</div><h2 id="ovt"></h2><p id="ovs" class="sub"></p><button class="go" id="again">Play again</button><button class="go" id="menu" style="background:var(--mut)">Back to Menu</button></div></div>
+
+<script>
+const D=[
+["Self Introduction",`What is your name?|My name is Rina.|I am fine.|I live in Jember.|I am a student.
+How are you?|I am fine, thank you.|My name is Ali.|I am twelve.|I am a doctor.
+“Nice to meet you.” Reply:|Nice to meet you, too.|You’re welcome.|Good night.|I’m sorry.
+How old are you?|I am twelve years old.|I am from Bali.|I am a teacher.|My name is Tono.
+Where are you from?|I am from Indonesia.|I am fine.|I am fifteen.|I like soccer.
+Complete: “I ___ a student.”|am|is|are|be
+Complete: “She ___ from Surabaya.”|is|am|are|be
+Which is a greeting for the morning?|Good morning|Good night|Good afternoon|Good evening
+“Where do you live?” Answer:|I live in Jember.|I am eleven.|I am a doctor.|I like cats.
+Complete: “___ name is Sinta.”|My|I|Me|Mine
+What do you say when you leave?|See you later.|Nice to meet you.|Good morning.|How are you?
+Which sentence asks about age?|How old are you?|Where are you?|Who are you?|What are you?
+Complete: “They ___ my friends.”|are|is|am|be
+Which is polite for asking a name?|May I know your name?|Who you?|Name you what?|You name?
+Which sentence is correct?|He is my brother.|He are my brother.|He am my brother.|He be my brother.`],
+["Letters and Numbers",`How many letters are in the English alphabet?|26|24|28|30
+What comes after the letter C?|D|B|E|F
+Which letter is a vowel?|E|B|K|T
+What is “twelve” in numbers?|12|20|22|2
+What is 15 in words?|fifteen|fifty|fourteen|five
+What is 40 in words?|forty|fourteen|fourty|four
+5 + 3 = ?|eight|seven|nine|six
+Which number is the biggest?|ninety|nineteen|fifty|thirteen
+What comes before the letter M?|L|N|K|O
+How do you spell the number 3?|three|tree|thre|trhee
+What is the first letter of “apple”?|A|P|E|L
+10 − 4 = ?|six|five|seven|four
+Which is an even number?|ten|seven|nine|eleven
+What is the last letter of the alphabet?|Z|Y|X|A
+2 × 5 = ?|ten|seven|twelve|eight`],
+["Hobbies",`Which one is a hobby?|Reading novels|Washing dishes|Sweeping the floor|Brushing teeth
+She likes ___ pictures.|drawing|draw|draws|drew
+What do you do with a guitar?|Play it|Eat it|Wear it|Drink it
+Complete: “My hobby ___ swimming.”|is|are|am|be
+What is “memancing” in English?|fishing|cooking|reading|dancing
+What is “menari” in English?|dancing|singing|swimming|running
+He likes ___ badminton.|playing|plays|play|played
+Which hobby uses a camera?|Photography|Gardening|Cooking|Painting
+What do you need for fishing?|A fishing rod|A pencil|A guitar|A ball
+“What is your hobby?” Answer:|My hobby is cooking.|I am fine.|I am ten.|It is red.
+She enjoys ___ flowers in the garden.|planting|plant|plants|planted
+What is “bersepeda” in English?|cycling|climbing|jumping|skating
+Which one is an indoor hobby?|Reading|Hiking|Fishing|Cycling
+Complete: “I ___ singing.”|love|loves|lovely|loved
+Which word means “mengoleksi”?|collecting|connecting|correcting|cooking`],
+["Food and Drink",`Which one is a drink?|Orange juice|Fried rice|Noodles|Bread
+What is “nasi” in English?|rice|bread|egg|meat
+We drink ___ when we are thirsty.|water|rice|salt|bread
+Which food is sweet?|Cake|Salt|Chili|Lemon
+What is “telur” in English?|egg|milk|fish|meat
+I would like a glass of ___.|milk|bread|noodles|chicken
+Which one comes from a cow?|Milk|Honey|Egg|Salt
+What do we use to eat soup?|A spoon|A knife|Chopsticks|A glass
+“I am hungry.” means...|Saya lapar.|Saya haus.|Saya kenyang.|Saya lelah.
+Which food is spicy?|Chili|Sugar|Honey|Bread
+“___ you want some tea?”|Do|Does|Is|Are
+The food we eat in the morning is...|breakfast|lunch|dinner|supper
+What is “ayam goreng” in English?|fried chicken|boiled egg|grilled fish|roasted beef
+I drink a cup of ___.|coffee|rice|bread|chicken
+Which sentence is polite when ordering?|Can I have a glass of water, please?|Give me water!|Water now!|I want water, quick!`],
+["Daily Activities",`What do you do after you wake up?|Take a bath|Go to bed|Have dinner|Watch the stars
+I ___ to school every day.|go|goes|going|went
+She ___ breakfast at 6 o’clock.|has|have|having|haves
+What time do you usually sleep?|At 9 p.m.|At 9 a.m.|In the morning|At noon
+He ___ his teeth twice a day.|brushes|brush|brushing|brushed
+What is “bangun tidur” in English?|wake up|go to bed|get dressed|sit down
+They ___ football every Sunday.|play|plays|playing|played
+Which is done at night?|Go to bed|Have breakfast|Go to school|Take a morning walk
+What is “mandi” in English?|take a bath|take a nap|take a bus|take a photo
+My mother ___ lunch at noon.|cooks|cook|cooking|cooked
+What time is 07.30?|half past seven|half past six|seven to thirty|a quarter to seven
+What do you do at school?|Study|Sleep all day|Cook rice|Cut hair
+I always ___ my homework after school.|do|does|doing|did
+What does “usually” mean?|biasanya|jarang|tidak pernah|selalu
+Which sentence is correct?|She watches TV every night.|She watch TV every night.|She watching TV every night.|She watchs TV every night.`],
+["Family Members",`Your father’s wife is your...|mother|sister|aunt|grandmother
+Your mother’s brother is your...|uncle|cousin|grandfather|brother
+Your father’s father is your...|grandfather|uncle|brother|nephew
+“Kakak perempuan” is...|older sister|aunt|niece|mother
+Your uncle’s child is your...|cousin|brother|nephew|father
+Your brother’s daughter is your...|niece|nephew|aunt|cousin
+Plural form of ‘child’ is:|children|childs|childrens|childes
+This is my father. ___ name is Pak Budi.|His|Her|He|Him
+Your sister’s son is your...|nephew|niece|uncle|cousin
+“Parents” means...|father and mother|brother and sister|uncle and aunt|grandfather and grandmother
+My grandmother is my mother’s ___.|mother|sister|daughter|aunt
+“She is my aunt” means...|Dia adalah bibi saya.|Dia adalah ibu saya.|Dia adalah kakak saya.|Dia adalah nenek saya.
+How many people are in “a family of four”?|4|2|3|5
+Complete: “My brother and I ___ close.”|are|is|am|be
+Your parents’ parents are your...|grandparents|cousins|siblings|neighbors`],
+["Fruits and Vegetables",`Which one is a vegetable?|Carrot|Apple|Banana|Grape
+Which fruit is yellow?|Banana|Watermelon|Strawberry|Grape
+What is “semangka” in English?|watermelon|melon|pineapple|papaya
+What is “bawang merah” in English?|shallot|garlic|ginger|chili
+Which fruit is red and small, with seeds outside?|Strawberry|Banana|Orange|Mango
+What is “wortel” in English?|carrot|cabbage|spinach|potato
+An ___ a day keeps the doctor away.|apple|banana|carrot|tomato
+Which one is green?|Spinach|Carrot|Strawberry|Banana
+What is “nanas” in English?|pineapple|papaya|durian|jackfruit
+Which fruit has a thick, spiky skin and a strong smell?|Durian|Grape|Apple|Pear
+“Tomatoes” is the plural of...|tomato|tomatoe|tomatos|tomate
+Which vegetable can make you cry when you cut it?|Onion|Cucumber|Corn|Lettuce
+What is “mangga” in English?|mango|melon|manggo|mandarin
+Which one is a root vegetable?|Potato|Cabbage|Spinach|Lettuce
+Which fruit has the same name as a color?|Orange|Mango|Banana|Papaya`],
+["Pets",`Which animal says “meow”?|cat|dog|bird|fish
+Which animal says “woof”?|dog|cat|cow|duck
+Which pet lives in water?|fish|rabbit|parrot|cat
+What does a rabbit like to eat?|carrots|bones|meat|worms
+What is “kucing” in English?|cat|cow|duck|rat
+Which pet can repeat words like humans?|parrot|goldfish|turtle|rabbit
+Which animal has long ears?|rabbit|cat|hamster|bird
+Dogs like to chew...|bones|stones|paper|soap
+I have two ___. (cat)|cats|cat|cates|catten
+What is “kura-kura” in English?|turtle|snake|frog|lizard
+Which animal has feathers?|bird|cat|dog|fish
+Where does a bird usually live?|In a nest|In the sea|In a river|In a box of ice
+We feed our pets...|food|stones|books|shoes
+A baby cat is called a...|kitten|puppy|chick|cub
+A baby dog is called a...|puppy|kitten|calf|cub`],
+["Wild Animals",`Which animal is the king of the jungle?|lion|rabbit|goat|cat
+Which animal has a very long neck?|giraffe|lion|tiger|zebra
+Which animal has a trunk?|elephant|rhino|hippo|bear
+Which animal has black and white stripes?|zebra|tiger|cheetah|leopard
+What is “harimau” in English?|tiger|lion|leopard|wolf
+Which animal swings from tree to tree?|monkey|crocodile|snake|hippo
+What is “buaya” in English?|crocodile|snake|lizard|shark
+Which is the fastest land animal?|cheetah|elephant|turtle|bear
+Which animal can fly and sleeps upside down?|bat|lion|snake|monkey
+Wild animals live in the ___.|jungle|house|kitchen|classroom
+What is “ular” in English?|snake|snail|shark|sheep
+Which sea animal has sharp teeth and is dangerous?|shark|dolphin|turtle|seahorse
+A tiger is a...|carnivore|herbivore|vegetarian|omnivore
+Which animal has a horn on its nose?|rhino|zebra|giraffe|monkey
+What is “beruang” in English?|bear|bee|bull|bat`],
+["Jobs",`Who treats sick people in a hospital?|doctor|farmer|pilot|chef
+Who teaches students at school?|teacher|police officer|fisherman|singer
+Who cooks in a restaurant?|chef|pilot|farmer|dentist
+Who flies an airplane?|pilot|driver|sailor|farmer
+What does a farmer do?|grows rice and vegetables|fixes cars|catches thieves|draws buildings
+Who catches thieves?|police officer|baker|tailor|singer
+What is “dokter gigi” in English?|dentist|nurse|doctor|pharmacist
+Who makes clothes?|tailor|baker|fisherman|driver
+My father is ___ engineer.|an|a|the|any
+Who helps doctors take care of patients?|nurse|chef|waiter|artist
+Who catches fish at sea?|fisherman|farmer|teacher|pilot
+What does a driver do?|drives a vehicle|bakes bread|cuts hair|paints pictures
+“What does your mother do?” Answer:|She is a nurse.|She is thirty.|She is angry.|She is my mother.
+Who bakes bread?|baker|butcher|carpenter|painter
+Where does a teacher work?|school|hospital|farm|airport`],
+["School Subjects",`Which subject teaches numbers and calculation?|Mathematics|Art|Music|History
+Which subject is about the past?|History|Science|Sports|Geography
+What is “Bahasa Inggris” in English?|English|Indonesian|Science|Religion
+In which subject do we draw and paint?|Art|Mathematics|Science|Civics
+Which subject is about maps, countries, and oceans?|Geography|Music|English|Physical Education
+In which subject do we learn to sing and play instruments?|Music|History|Science|Mathematics
+What is “Ilmu Pengetahuan Alam” in English?|Science|Social Studies|Mathematics|Geography
+Which subject do we have when we play football or do exercises?|Physical Education|Art|Civics|Science
+What is “Pendidikan Agama” in English?|Religion|Civics|History|Language
+We study chemistry and biology in...|Science|Art|Music|Physical Education
+I have English ___ Monday.|on|in|at|to
+What do we use in Mathematics class to measure a line?|A ruler|A guitar|A map|A paintbrush
+“Pendidikan Kewarganegaraan” is...|Civics|Geography|History|Biology
+“What is your favorite subject?” Answer:|My favorite subject is Science.|I am fine.|I am twelve.|It is on Monday.
+A school timetable shows...|the lessons for each day|the price of food|the weather|the family members`],
+["Body Parts",`We see with our...|eyes|ears|nose|hands
+We hear with our...|ears|eyes|mouth|feet
+We smell with our...|nose|hands|hair|knees
+We eat food with our...|mouth|ears|elbows|eyes
+What is “tangan” in English?|hand|head|leg|foot
+What is “kaki” in English?|foot|hand|arm|neck
+Which part connects the head and the body?|neck|knee|elbow|ankle
+Which part of the body helps us walk?|legs|arms|ears|eyebrows
+How many fingers do we have on two hands?|ten|five|eight|twelve
+What is “gigi” in English?|teeth|tongue|lips|hair
+Plural of “foot” is...|feet|foots|feets|footes
+Which organ pumps blood?|heart|brain|stomach|liver
+We think with our...|brain|knee|nose|finger
+What is “bahu” in English?|shoulder|elbow|stomach|chest
+We brush our ___ every day.|teeth|ears|knees|eyes`]
+].map(([n,s])=>({n,q:s.trim().split("\n").map(l=>l.split("|"))}));
+
+const $=s=>document.querySelector(s),STEP=17,WIN=5;
+const sh=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let sel=0,pos=0,sc,time,run=false,tid,deck={},cur={},lock={},names={};
+
+D.forEach((t,i)=>{const b=document.createElement("button");b.className="tp"+(i?"":" on");b.textContent=t.n;b.onclick=()=>{sel=i;document.querySelectorAll(".tp").forEach((x,j)=>x.classList.toggle("on",j==i))};$("#tps").appendChild(b)});
+
+const person=(x,c,flip)=>`<g transform="translate(${x},300)${flip?" scale(-1,1)":""}"><path d="M0-40L20 0M0-40L-20 0" stroke="#1f2937" stroke-width="10" stroke-linecap="round"/><path d="M0-40L-22-88" stroke="${c}" stroke-width="24" stroke-linecap="round"/><path d="M-20-82L32-70" stroke="${c}" stroke-width="9" stroke-linecap="round"/><circle cx="-28" cy="-108" r="13" fill="#f1c9a0"/><path d="M-42-110a14 14 0 0 1 28 0z" fill="#1f2937"/></g>`;
+$("#grp").innerHTML=`<line x1="170" y1="230" x2="480" y2="230" stroke="#111" stroke-width="4"/><path d="M325 222l8 14h-16z" fill="#e53935"/>`+person(170,"#2196f3")+person(240,"#2196f3")+person(480,"#e53935",1)+person(410,"#e53935",1);
+
+function nextQ(t){
+ if(!(deck[t]||[]).length)deck[t]=sh(D[sel].q);
+ const x=deck[t].pop();
+ cur[t]={q:x[0],o:sh(x.slice(1).map((o,i)=>({o,c:!i})))};lock[t]=false;
+ const p=$(t=="b"?"#pb":"#pr");
+ p.innerHTML=`<div class="qb">${cur[t].q}</div>`+cur[t].o.map((a,i)=>`<button class="op" data-i="${i}"><i>${"ABCD"[i]}</i><span>${a.o}</span></button>`).join("");
+}
+function answer(t,i){
+ if(!run||lock[t])return;
+ lock[t]=true;
+ const p=$(t=="b"?"#pb":"#pr"),bs=p.querySelectorAll(".op"),ok=cur[t].o[i].c;
+ bs.forEach((b,j)=>{b.disabled=true;if(cur[t].o[j].c)b.classList.add("ok")});
+ if(!ok)bs[i].classList.add("bad");
+ if(ok){sc[t]++;pos+=t=="b"?1:-1;upd();if(Math.abs(pos)>=WIN){end(pos>0?"b":"r");return}}
+ setTimeout(()=>run&&nextQ(t),ok?500:1000);
+}
+function upd(){
+ $("#sb").textContent=sc.b;$("#sr").textContent=sc.r;
+ $("#grp").style.transform=`translateX(${-pos*STEP}px)`;
+ $("#tm").textContent=String(time/60|0).padStart(2,"0")+":"+String(time%60).padStart(2,"0");
+}
+function start(){
+ names={b:$("#nb").value.trim()||"Tim Biru",r:$("#nr").value.trim()||"Tim Merah"};
+ $("#tnb").textContent=names.b;$("#tnr").textContent=names.r;
+ $("#tnb").style.textTransform=$("#tnr").style.textTransform="uppercase";
+ pos=0;sc={b:0,r:0};time=+$("#dur").value;deck={};run=true;
+ $("#setup").classList.add("hide");$("#game").classList.remove("hide");$("#ov").classList.add("hide");
+ nextQ("b");nextQ("r");upd();
+ clearInterval(tid);tid=setInterval(()=>{time--;upd();if(time<=0)end(pos>0?"b":pos<0?"r":null)},1000);
+}
+function end(w){
+ run=false;clearInterval(tid);
+ setTimeout(()=>{
+  $("#ovt").textContent=w?names[w]+" menang!":"Seri!";
+  $("#ovt").style.color=w=="b"?"var(--b)":w=="r"?"var(--r)":"inherit";
+  $("#ovs").textContent=`${names.b} ${sc.b} benar · ${names.r} ${sc.r} benar`;
+  $("#ov").classList.remove("hide");
+ },700);
+}
+function menu(){run=false;clearInterval(tid);$("#game").classList.add("hide");$("#ov").classList.add("hide");$("#setup").classList.remove("hide")}
+$("#start").onclick=start;$("#again").onclick=start;$("#menu").onclick=menu;$("#home").onclick=menu;
+$("#pb").onclick=e=>{const b=e.target.closest(".op");b&&answer("b",+b.dataset.i)};
+$("#pr").onclick=e=>{const b=e.target.closest(".op");b&&answer("r",+b.dataset.i)};
+const K={q:["b",0],w:["b",1],e:["b",2],r:["b",3],u:["r",0],i:["r",1],o:["r",2],p:["r",3]};
+document.addEventListener("keydown",e=>{if(!run||e.target.tagName=="INPUT"||e.ctrlKey||e.metaKey)return;const k=K[e.key.toLowerCase()];k&&answer(k[0],k[1])});
+</script>
+</body>
+</html>
